@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Lab09.ViewModels.CategoryGroup>
+
+    @{
+        ViewBag.Title = "Articles Statistics";
+    }
+
+    <h2>Articles Statistics</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Articles
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+                    <td>
+                        @item.ArticlesCount
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>

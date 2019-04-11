@@ -1,0 +1,87 @@
+﻿@model PagedList.IPagedList<Lab09.Models.Article>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Articles</h2>
+@if (Context.User.IsInRole("Admin"))
+{
+    <p>
+        <button type="button" onclick="location.href='@Url.Action("Create", "Articles")'" class="btn btn-info">Create New</button>
+    </p>
+}
+
+
+
+@using (Html.BeginForm("Index", "Articles", FormMethod.Get))
+{
+    <p>
+        <a>Find :</a> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" class="btn btn-primary" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            Sort by :
+        </th>
+        <th>
+            @Html.ActionLink("Topic", "Index", new { sortOrder = ViewBag.TopicSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Category", "Index", new { sortOrder = ViewBag.CategorySortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+    </tr>
+    </table>
+@foreach (var item in Model)
+{
+
+            <hr />
+            <h1 onclick="location.href='@Url.Action("Details", "Articles", new { id = item.ID })'"><bold>@Html.DisplayFor(modelItem => item.Topic)</bold></h1>
+            <hr />
+            <img src="~/Images/@item.ImgName" align="left" alt="" height="100" width="100" hspace="20"/>
+
+            
+            <big onclick="location.href='@Url.Action("Details", "Articles", new { id = item.ID })'">@item.Description.Substring(0, Math.Min(item.Description.Length, 700))</big>
+        <p> </p>
+        <hr />
+        <p> </p>
+        <p> </p>
+
+           <a>Region : </a> @Html.DisplayFor(modelItem => item.Region)
+    <a>&emsp;|&emsp;</a>
+        <a>Category : </a> @Html.DisplayFor(modelItem => item.Category)
+    <a>&emsp;|&emsp;</a>
+        <a>Rating : </a> @Html.DisplayFor(modelItem => item.Rating)
+    <a>&emsp;|&emsp;</a>
+        <a>Author : </a> @Html.DisplayFor(modelItem => item.Author)
+
+    <br />
+            <tr>
+                <td>
+                    <button type="button" onclick="location.href='@Url.Action("Details", "Articles", new { id = item.ID })'" class="btn btn-info">Details</button>
+                </td>
+@if (Context.User.IsInRole("Admin"))
+{
+                <td>
+                    <button type="button" onclick="location.href='@Url.Action("Edit", "Articles", new { id = item.ID })'" class="btn btn-warning">Edit</button>
+
+                </td>
+                <td>
+                    <button type="button" onclick="location.href='@Url.Action("Delete", "Articles", new { id = item.ID })'" class="btn btn-danger">Delete</button>
+                </td>
+}
+            </tr>
+            <br />
+
+}
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

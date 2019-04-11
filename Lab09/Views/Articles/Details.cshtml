@@ -1,0 +1,123 @@
+﻿@model Lab09.Models.Article
+@section styles{
+    <link href="@Url.Content("~/Content/Rating.css")" rel="stylesheet" type="text/css" />
+}
+    }
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Article</h4>
+    <hr />
+    <h1><bold>@Html.DisplayFor(model => model.Topic)</bold></h1>
+    <hr />
+    <img src="~/Images/@Html.DisplayFor(model => model.ImgName)" align="left" alt="" height="200" width="200" hspace="20" />
+    <big>@Html.DisplayFor(model => model.Description)</big>
+
+    <p> </p>
+    <hr/>
+    <p> </p>
+    <p>
+
+    <a><bold>@Html.DisplayNameFor(model => model.Region) :</bold></a>
+
+    @Html.DisplayFor(model => model.Region)
+
+    &emsp;|&emsp;
+
+    <a><bold>@Html.DisplayNameFor(model => model.Category) :</bold></a>
+
+    @Html.DisplayFor(model => model.Category)
+
+    &emsp;|&emsp;
+
+    <a><bold>@Html.DisplayNameFor(model => model.Rating) :</bold></a>
+
+    @Html.DisplayFor(model => model.Rating) /
+        @Html.DisplayFor(model => model.RatingCount)
+
+    &emsp;|&emsp;
+
+    <a><bold>@Html.DisplayNameFor(model => model.Author) :</bold></a>
+
+    @Html.DisplayFor(model => model.Author)
+
+    </p>
+
+
+@using (Html.BeginForm("Details", "Articles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-group">
+            <fieldset class="rating">
+                <a>Rate this article: </a>
+                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                <input type="radio" id="star4" name="rating" value="4" checked="checked" /><label for="star4" title="Pretty good">4 stars</label>
+                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+                
+            </fieldset>
+            <a>&emsp;</a>
+            <input type="submit" value="rate" class="btn btn-outline-danger" />
+</div>
+
+                
+ 
+    </div>
+}
+
+
+        <dl class="dl-horizontal">
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Comments)
+            </dt>
+            <dd>
+                <table class="table">
+                    <tr>
+                        <th>Skomentował:</th>
+                        <th>Komentarz:</th>
+                    </tr>
+                    @foreach (var item in Model.Comments)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nickname)
+                                <br />
+                                @Html.DisplayFor(modelIteam => item.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </dd>
+
+        </dl>
+
+
+
+
+        <button type="button" onclick="location.href='@Url.Action("Create", "Comments", new { articleID = Html.DisplayTextFor(model => model.ID) })'" class="btn btn-info">New Comment</button>
+
+@if (Context.User.IsInRole("Admin"))
+{
+
+        <button type="button" onclick="location.href='@Url.Action("Edit", "Articles", new { id = Html.DisplayTextFor(model => model.ID) })'" class="btn btn-warning">Edit</button>
+
+        <button type="button" onclick="location.href='@Url.Action("Delete", "Articles", new { id = Html.DisplayTextFor(model => model.ID) })'" class="btn btn-danger">Delete</button>
+
+}
+
+    </div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
